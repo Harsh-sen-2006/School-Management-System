@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XYZ Convent School | Student Portal</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css">
+    
+    <style>
+        :root { 
+            --primary-blue: #0a134d; 
+            --accent-gold: #f2a93b; 
+            --app-bg: #f3f4f8; 
+            --white: #ffffff; 
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; 
+        }
+
+        body { 
+            background: var(--app-bg); 
+            display: flex; 
+            justify-content: center; 
+            min-height: 100vh; 
+            padding: 12px 0; 
+        }
+
+        /* Phone UI Frame */
+        .phone { 
+            width: 390px; 
+            height: 844px; 
+            background: var(--white); 
+            border-radius: 35px; 
+            overflow: hidden; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25); 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            border: 8px solid #222; 
+        }
+        
+        /* Dashboard Header */
+        .header-main { 
+            background: var(--primary-blue); 
+            padding: 45px 20px 25px; 
+            color: white; 
+            border-radius: 0 0 30px 30px; 
+        }
+
+        .profile-hero { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            background: rgba(255,255,255,0.12); 
+            padding: 15px; 
+            border-radius: 20px; 
+        }
+
+        .profile-hero img { 
+            width: 75px; 
+            height: 75px; 
+            border-radius: 50%; 
+            border: 3px solid var(--accent-gold); 
+            object-fit: cover; 
+            background: #fff; 
+        }
+        
+        /* Grid Layout */
+        .features-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 12px; 
+            padding: 20px; 
+            flex: 1; 
+            align-content: start; 
+            margin-top: 5px;
+        }
+
+        .feature-item { text-align: center; cursor: pointer; }
+
+        .icon-box { 
+            width: 58px; 
+            height: 58px; 
+            background: var(--primary-blue); 
+            color: var(--accent-gold); 
+            border-radius: 16px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 20px; 
+            margin: 0 auto 8px; 
+            transition: 0.2s;
+        }
+
+        .feature-item:active .icon-box { transform: scale(0.9); }
+        
+        /* Screens Styling */
+        .screen { display: none; height: 100%; overflow-y: auto; padding: 20px 20px 100px; }
+        .screen.active { display: block; }
+
+        .back-nav { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            margin-bottom: 20px; 
+            color: var(--primary-blue); 
+            font-weight: 700; 
+            cursor: pointer; 
+        }
+
+        .card { 
+            background: white; 
+            border-radius: 18px; 
+            padding: 16px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04); 
+            margin-bottom: 15px; 
+            border: 1px solid #eee; 
+        }
+        
+        /* Form Inputs */
+        input, textarea, select { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 8px 0; 
+            border-radius: 10px; 
+            border: 1px solid #ddd; 
+            font-size: 14px;
+        }
+
+        .btn-save { 
+            width: 100%; 
+            padding: 15px; 
+            background: #16a34a; 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 5px;
+        }
+
+        /* Bottom Tab Bar */
+        .bottom-nav { 
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            background: var(--white); 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 12px 20px; 
+            border-top: 1px solid #f0f0f0; 
+            border-radius: 0 0 27px 27px; 
+            z-index: 1000; 
+        }
+
+        .nav-item { text-align: center; color: #abb5be; cursor: pointer; transition: 0.3s; }
+        .nav-item.active-nav { color: var(--primary-blue); }
+        .nav-item p { font-size: 10px; margin-top: 4px; font-weight: 700; }
+
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+
+        /* Status Badges */
+        .status-badge { font-size: 10px; padding: 2px 8px; border-radius: 5px; font-weight: bold; text-transform: uppercase; }
+        .paid { background: #dcfce7; color: #16a34a; }
+        .pending { background: #fee2e2; color: #ef4444; }
+        .study-btn { display: inline-block; padding: 5px 12px; background: var(--primary-blue); color: white; border-radius: 8px; text-decoration: none; font-size: 11px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="phone">
+    
+    <div id="homeScreen" class="screen active" style="padding:0;">
+        <div class="header-main">
+            <p style="text-align:center; font-size:11px; margin-bottom:12px; letter-spacing: 2px; opacity:0.8;">STUDENT PORTAL</p>
+            <div class="profile-hero">
+                <img id="s-img" src="https://ui-avatars.com/api/?name=Student">
+                <div class="hero-info">
+                    <h2 id="s-name" style="font-size: 18px;">Loading...</h2>
+                    <p style="font-size: 13px; opacity: 0.9;">Class: <span id="s-class-display">-</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin: 15px; padding: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h4 style="font-size: 13px; color: var(--primary-blue); font-weight: 700;">Academic Calendar</h4>
+                <span id="currentMonthYear" style="font-size: 11px; font-weight: 800; color: var(--accent-gold);"></span>
+            </div>
+            <div id="dashboard-calendar-grid" class="cal-grid"></div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-item" onclick="showScreen('profileDetailsScreen')"><div class="icon-box"><i class="fas fa-user-graduate"></i></div><p style="font-size:9px;">Profile</p></div>
+            <div class="feature-item" onclick="showScreen('attendanceScreen')"><div class="icon-box"><i class="fas fa-calendar-check"></i></div><p style="font-size:9px;">Attendance</p></div>
+            <div class="feature-item" onclick="showScreen('diaryScreen')"><div class="icon-box"><i class="fas fa-book-open"></i></div><p style="font-size:9px;">Class Diary</p></div>
+            <div class="feature-item" onclick="showScreen('homeworkScreen')"><div class="icon-box"><i class="fas fa-edit"></i></div><p style="font-size:9px;">Homework</p></div>
+            <div class="feature-item" onclick="showScreen('studyScreen')"><div class="icon-box"><i class="fas fa-file-pdf"></i></div><p style="font-size:9px;">Study Material</p></div>
+            <div class="feature-item" onclick="showScreen('feeScreen')"><div class="icon-box"><i class="fas fa-wallet"></i></div><p style="font-size:9px;">Fees Status</p></div>
+            <div class="feature-item" onclick="showScreen('timetableScreen')"><div class="icon-box"><i class="fas fa-clock"></i></div><p style="font-size:9px;">Timetable</p></div>
+            <div class="feature-item" onclick="showScreen('resultScreen')"><div class="icon-box"><i class="fas fa-poll-h"></i></div><p style="font-size:9px;">Result</p></div>
+            <div class="feature-item" onclick="showScreen('leaveRequestsScreen')"><div class="icon-box"><i class="fas fa-envelope-open-text"></i></div><p style="font-size:9px;">Apply Leave</p></div>
+        </div>
+    </div>
+
+    <div id="noticeScreen" class="screen">
+        <div class="back-nav" onclick="showScreen('homeScreen')"><i class="fas fa-arrow-left"></i> Alerts & Notices</div>
+        <div id="studentNoticeList">
+            <p style="text-align:center; padding:20px; color:#999;">Loading notices...</p>
+        </div>
+    </div>
+
+    <div id="diaryScreen" class="screen">
+        <div class="back-nav" onclick="showScreen('homeScreen')"><i class="fas fa-arrow-left"></i> Today's Class Diary</div>
+        <div id="studentDiaryList"></div>
+    </div>
+
+    <div id="studyScreen" class="screen">
+        <div class="back-nav" onclick="showScreen('homeScreen')"><i class="fas fa-arrow-left"></i> Study Material</div>
+        <div id="studentStudyList"></div>
+    </div>
+
+    <div id="feeScreen" class="screen">
+        <div class="back-nav" onclick="showScreen('homeScreen')"><i class="fas fa-arrow-left"></i> My Fee Record</div>
+        <div id="studentFeeList"></div>
+    </div>
+
+    <div id="profileDetailsScreen" class="screen">
+        <div class="back-nav" onclick="showScreen('homeScreen')"><i class="fas fa-arrow-left"></i> My Profile</div>
+        <div class="card" style="text-align:center; padding: 25px 15px;">
+            <img id="s-img-large" src="" style="width:100px; height:100px; border-radius:50%; border:3px solid var(--accent-gold); object-fit:cover;">
+            <h3 id="s-name-large" style="margin-top: 12px;">Student Name</h3>
+            <p id="p-class" style="color:#888; font-size: 14px;">Class Details</p>
+        </div>
+        <div class="card" style="font-size: 14px; line-height: 2;">
+            <p><b>Roll No:</b> <span id="p-roll">-</span></p>
+            <p><b>Mobile:</b> <span id="p-mobile">-</span></p>
+            <p><b>Email:</b> <span id="p-email">-</span></p>
+            <p><b>DOB:</b> <span id="p-dob">-</span></p>
+        </div>
+    </div>
+
+    <div id="attendanceScreen" class="screen">
+        <div class="back-nav" onclick="showScreen('homeScreen')"><i class="fas fa-arrow-left"></i> Attendance Stats</div>
+        <div class="card" style="text-align: center; background: var(--primary-blue); color: white; border: none;">
+            <h3 style="font-size: 14px; margin-bottom: 5px; opacity: 0.8;">Yearly Average</h3>
+            <h1 id="att-percentage" style="font-size: 36px; margin: 10px 0;">0%</h1>
+            <div style="display: flex; justify-content: space-around; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; margin-top: 10px;">
+                <div><h2 id="att-total-days" style="font-size: 18px;">0</h2><p style="font-size:9px; opacity:0.7;">TOTAL</p></div>
+                <div><h2 id="att-present-days" style="font-size: 18px;">0</h2><p style="font-size:9px; opacity:0.7;">PRESENT</p></div>
+                <div><h2 id="att-absent-days" style="font-size: 18px;">0</h2><p style="font-size:9px; opacity:0.7;">ABSENT</p></div>
+            </div>
+        </div>
+        <div class="card">
+            <h4 style="font-size: 13px; color: var(--primary-blue); margin-bottom: 12px;"><i class="fas fa-calendar-alt"></i> Monthly Overview</h4>
+            <div id="calendar-grid" class="cal-grid"></div>
+        </div>
+        <div id="studentAttList"></div>
+    </div>
+
+    <div id="homeworkScreen" class="screen"><div class="back-nav" onclick="showScreen('homeScreen')"><i class="fas fa-arrow-left"></i> Daily Homework</div><div id="studentHwList"></div></div>
+    <div id="timetableScreen" class="screen"><div class="back-nav" onclick="showScreen('homeScreen')"><i class="fas fa-arrow-left"></i> Schedule</div><div id="studentTTList"></div></div>
+    <div id="resultScreen" class="screen"><div class="back-nav" onclick="showScreen('homeScreen')"><i class="fas fa-arrow-left"></i> Academic Results</div><div id="studentResultList"></div></div>
+
+    <div id="leaveRequestsScreen" class="screen">
+        <div class="back-nav" onclick="showScreen('homeScreen')"><i class="fas fa-arrow-left"></i> Apply Leave</div>
+        <div class="card">
+            <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--primary-blue);">Request Form</h4>
+            <select id="selectTeacher"><option value="">Select Teacher</option></select>
+            <input type="date" id="leaveDate">
+            <textarea id="leaveReason" placeholder="Reason for leave application..." rows="3" style="resize:none;"></textarea>
+            <button onclick="submitLeave()" class="btn-save" style="background:#16a34a;">Submit Request</button>
+        </div>
+        <h4 style="margin: 15px 5px 10px; font-size: 14px; color: var(--primary-blue);">Past Requests</h4>
+        <div id="myLeaveList"></div>
+    </div>
+
+    <div id="settingsScreen" class="screen">
+        <div class="back-nav" onclick="showScreen('homeScreen')"><i class="fas fa-arrow-left"></i> Settings</div>
+        <div class="card" onclick="showScreen('profileDetailsScreen')" style="cursor:pointer;"><i class="fas fa-user" style="margin-right:10px;"></i> View Profile</div>
+        <div class="card" onclick="openEditModal()" style="cursor:pointer;"><i class="fas fa-user-edit" style="margin-right:10px;"></i> Edit My Info</div>
+        <div class="card" onclick="logout()" style="color:#e11d48; cursor:pointer;"><i class="fas fa-sign-out-alt" style="margin-right:10px;"></i> Logout</div>
+    </div>
+
+    <div id="editProfileModal" class="screen" style="position:absolute; top:0; left:0; width:100%; height:100%; background:white; z-index:9999;">
+        <div class="back-nav" onclick="document.getElementById('editProfileModal').classList.remove('active')"><i class="fas fa-times"></i> Close</div>
+        <div id="cropArea" style="display:none; padding: 10px;">
+            <div id="crop-ui"></div>
+            <button onclick="applyCrop()" class="btn-save" style="background:#0284c7;">Crop & Save</button>
+        </div>
+        <div id="profileForm">
+            <center style="margin-bottom: 25px;">
+                <div style="position:relative; display:inline-block;">
+                    <img id="s-edit-prev" src="" style="width:95px; height:95px; border-radius:50%; border:3px solid var(--accent-gold); object-fit:cover;">
+                    <label for="imgIn" style="position:absolute; bottom:0; right:0; background:var(--primary-blue); color:white; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; border:2px solid white;"><i class="fas fa-camera" style="font-size:12px;"></i></label>
+                </div>
+                <input type="file" id="imgIn" style="display:none;" onchange="startCropping(this)">
+            </center>
+            <input type="text" id="editName" placeholder="Full Name">
+            <input type="number" id="editMobile" placeholder="Contact Number">
+            <input type="email" id="editEmail" placeholder="Email Address">
+            <input type="date" id="editDob" title="Date of Birth">
+            <button onclick="saveStudentProfile()" class="btn-save">Update Profile</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item active-nav" id="nav-home" onclick="navTo('homeScreen', 'nav-home')">
+        <i class="fas fa-th-large"></i><p>Home</p>
+      </div>
+      <div id="nav-notice" class="nav-item" onclick="navTo('noticeScreen', 'nav-notice')">
+        <i class="fas fa-bullhorn"></i><p>Alerts</p>
+      </div>
+      <div id="nav-settings" class="nav-item" onclick="navTo('settingsScreen', 'nav-settings')">
+        <i class="fas fa-cog"></i><p>Account</p>
+      </div>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+<script type="module" src="student.js"></script>
+<script>
+    window.navTo = (targetScreen, navBtnId) => { 
+        showScreen(targetScreen); 
+        document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active-nav')); 
+        document.getElementById(navBtnId).classList.add('active-nav'); 
+    };
+
+    window.showScreen = (screenId) => { 
+        const target = document.getElementById(screenId);
+        if (target) {
+            document.querySelectorAll('.screen').forEach(view => view.classList.remove('active')); 
+            target.classList.add('active'); 
+            
+            if(screenId === 'homeScreen') { 
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active-nav')); 
+                const homeNav = document.getElementById('nav-home');
+                if(homeNav) homeNav.classList.add('active-nav'); 
+            }
+        }
+    };
+
+    window.openEditModal = () => document.getElementById('editProfileModal').classList.add('active');
+    window.logout = () => { if(confirm("Logout?")) { localStorage.clear(); window.location.href="login.html"; } };
+</script>
+</body>
+</html>

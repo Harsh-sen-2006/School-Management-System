@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XYZ Convent School | Admin Control</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root { 
+            --admin-blue: #1e3a8a; 
+            --admin-accent: #f59e0b; 
+            --soft-gray: #f8fafc;
+            --glass-white: rgba(255, 255, 255, 0.95);
+            --danger: #ef4444;
+            --success: #16a34a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        
+        body { 
+            background: #cbd5e1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px; 
+        }
+
+        /* UI Frame */
+        .phone-frame { 
+            width: 390px; 
+            height: 844px; 
+            background: var(--soft-gray); 
+            border-radius: 40px; 
+            border: 8px solid #222; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+
+        /* Header */
+        .app-header { 
+            background: var(--admin-blue); 
+            color: white; 
+            padding: 45px 20px 20px; 
+            text-align: center; 
+            border-radius: 0 0 30px 30px;
+        }
+
+        .app-header h2 { font-size: 18px; letter-spacing: 1px; text-transform: uppercase; }
+        .app-header p { font-size: 10px; opacity: 0.7; margin-top: 4px; }
+
+        /* Scroll Area */
+        .viewport { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 15px; 
+            padding-bottom: 100px;
+        }
+        .viewport::-webkit-scrollbar { display: none; }
+
+        .screen { display: none; animation: fadeIn 0.3s ease; }
+        .active-screen { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card { 
+            background: var(--glass-white); 
+            padding: 18px; 
+            border-radius: 20px; 
+            margin-bottom: 15px; 
+            border: 1px solid #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .card h3 { 
+            font-size: 14px; 
+            color: var(--admin-blue); 
+            margin-bottom: 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+
+        /* Form Elements */
+        input, select, textarea { 
+            width: 100%; 
+            padding: 11px 14px; 
+            margin: 6px 0; 
+            border-radius: 10px; 
+            border: 1px solid #e2e8f0; 
+            font-size: 13px;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--admin-blue); }
+
+        .btn-action { 
+            width: 100%; 
+            padding: 12px; 
+            border: none; 
+            border-radius: 10px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: 0.2s;
+            margin-top: 8px;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .btn-orange { background: var(--admin-accent); color: white; }
+        .btn-blue { background: var(--admin-blue); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+
+        /* Navigation */
+        .bottom-nav { 
+            position: absolute; bottom: 0; width: 100%; height: 80px; 
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            border-top: 1px solid #eee; display: flex; 
+            justify-content: space-around; padding-top: 10px;
+        }
+
+        .nav-tab { text-align: center; color: #94a3b8; cursor: pointer; }
+        .nav-tab i { font-size: 18px; }
+        .nav-tab p { font-size: 9px; font-weight: 700; margin-top: 4px; }
+        .active-tab { color: var(--admin-blue); }
+
+        /* List Items */
+        .list-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px; background: #fdfdfd; border-radius: 10px;
+            margin-bottom: 8px; border: 1px solid #f1f5f9;
+        }
+        .tag { font-size: 9px; padding: 2px 8px; border-radius: 5px; font-weight: bold; }
+        .tag-paid { background: #dcfce7; color: var(--success); }
+        .tag-pending { background: #fee2e2; color: var(--danger); }
+    </style>
+</head>
+<body>
+
+<div class="phone-frame">
+    <header class="app-header">
+        <h2 id="headerTitle">Admin Control</h2>
+        <p>CONTROL CENTER v2.5</p>
+    </header>
+
+    <div class="viewport">
+        <div id="noticeScreen" class="screen active-screen">
+            <div class="card">
+                <h3><i class="fas fa-bullhorn"></i> Announcement</h3>
+                <input type="text" id="notTitle" placeholder="Notice Title">
+                <textarea id="notMsg" placeholder="Write full message here..." rows="3"></textarea>
+                <select id="notTarget">
+                    <option value="All">Everyone</option>
+                    <option value="Teacher">Teachers Only</option>
+                    <option value="Student">Students Only</option>
+                </select>
+                <button class="btn-action btn-orange" onclick="sendNotice()">Send Alert</button>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-file-pdf"></i> Study Material</h3>
+                <input type="text" id="matTitle" placeholder="Topic/Subject Name">
+                <input type="text" id="matLink" placeholder="Drive URL or PDF Link">
+                <select id="matClass">
+                    <option value="All">All Classes</option>
+                    <option value="LKG">LKG</option><option value="UKG">UKG</option>
+                <option value="Class 1">Class 1</option><option value="Class 2">Class 2</option>
+                <option value="Class 3">Class 3</option><option value="Class 4">Class 4</option>
+                <option value="Class 5">Class 5</option><option value="Class 6">Class 6</option>
+                <option value="Class 7">Class 7</option><option value="Class 8">Class 8</option>
+                <option value="Class 9">Class 9</option><option value="Class 10">Class 10</option>
+                <option value="Class 11">Class 11</option><option value="Class 12">Class 12</option>
+                </select>
+                <button class="btn-action btn-blue" onclick="uploadMaterial()">Add Content</button>
+            </div>
+        </div>
+
+        <div id="userScreen" class="screen">
+            <div class="card">
+                <h3><i class="fas fa-user-plus"></i> New Registration</h3>
+                <input type="number" id="uMobile" placeholder="Mobile Number">
+                <input type="password" id="uPass" placeholder="Login Password">
+                <select id="uRole">
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                </select>
+                <input type="text" id="uClass" placeholder="Assign Class (e.g. 10th-B)">
+                <button class="btn-action btn-blue" onclick="addUser()">Create Account</button>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-money-check-alt"></i> Fee Management</h3>
+                <select id="feeStudent">
+                    <option value="">Select Student...</option>
+                </select>
+                <input type="text" id="feeMonth" placeholder="Ex: April 2026">
+                <select id="feeStatus">
+                    <option value="Paid">Mark as Paid</option>
+                    <option value="Pending">Mark as Pending</option>
+                </select>
+                <button class="btn-action btn-orange" onclick="updateFee()">Update Fee Record</button>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-address-book"></i> Teacher Directory</h3>
+                <div id="teacherList">
+                    </div>
+            </div>
+        </div>
+
+        <div id="settingScreen" class="screen">
+            <div class="card">
+                <h3><i class="fas fa-shield-alt"></i> System Health</h3>
+                <div class="list-item"><span>Database</span><span class="tag tag-paid">ONLINE</span></div>
+                <div class="list-item"><span>Security</span><span class="tag tag-paid">SSL ACTIVE</span></div>
+                <div class="list-item"><span>App Version</span><span class="tag" style="background:#eee;">2.5.0</span></div>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-power-off"></i> Danger Zone</h3>
+                <button class="btn-action btn-danger" onclick="clearLogs()">Reset Alerts</button>
+                <button class="btn-action" style="background: #475569; color:white;" onclick="logout()">End Session</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-tab active-tab" id="tabNotice" onclick="showScreen('noticeScreen', 'tabNotice', 'Broadcast')">
+            <i class="fas fa-bullhorn"></i><p>Broadcast</p>
+        </div>
+        <div class="nav-tab" id="tabUser" onclick="showScreen('userScreen', 'tabUser', 'Manager')">
+            <i class="fas fa-users-cog"></i><p>Manage</p>
+        </div>
+        <div class="nav-tab" id="tabSetting" onclick="showScreen('settingScreen', 'tabSetting', 'Config')">
+            <i class="fas fa-cog"></i><p>Settings</p>
+        </div>
+    </nav>
+</div>
+
+<script type="module" src="admin.js"></script>
+<script>
+    // Navigation
+    window.showScreen = function(id, tab, title) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active-tab'));
+        document.getElementById(id).classList.add('active-screen');
+        document.getElementById(tab).classList.add('active-tab');
+        document.getElementById('headerTitle').innerText = title;
+        if(window.navigator.vibrate) window.navigator.vibrate(5);
+    }
+
+    window.logout = () => { if(confirm("Logout?")) { localStorage.clear(); window.location.href="login.html"; } }
+    window.clearLogs = () => { if(confirm("Clear all alerts?")) alert("System logs cleared."); }
+</script>
+
+</body>
+</html>

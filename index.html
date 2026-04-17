@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome | XYZ School</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="splash-screen" onclick="redirectToLogin()">
+
+    <div class="overlay">
+        <div class="welcome-content">
+            <div class="dev-tag">By Haren-Dev</div>
+            <i class="fas fa-school main-icon"></i>
+            <h1>XYZ CONVENT <br><span>SCHOOL</span></h1>
+            <p>Smart Management System</p>
+            
+            <div class="loader"></div> <p class="tap-hint">Click anywhere to continue</p>
+        </div>
+    </div>
+
+    <script>
+        // 3 Second baad apne aap login page par bhejne ke liye
+        const timeout = setTimeout(redirectToLogin, 3000);
+
+        function redirectToLogin() {
+            clearTimeout(timeout); // Timer stop karein agar user ne pehle touch kar diya
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>
